@@ -1,5 +1,5 @@
 // Now : coquille de l'appli en cache (hors-ligne), données en « réseau d'abord » avec repli sur la dernière copie.
-const V = 'now-v2';
+const V = 'now-v3';
 const COQUILLE = ['./', 'index.html', 'manifest.webmanifest', 'fonts/fonts.css', 'fonts/atkinson-400.woff2', 'fonts/atkinson-700.woff2',
   'fonts/bricolage-500-800.woff2', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png', 'icons/favicon-32.png',
   'intro/poster.jpg', 'intro/intro.mp4', 'intro/intro.webm'];

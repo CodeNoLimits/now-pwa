@@ -66,6 +66,27 @@ header{display:flex;justify-content:space-between;align-items:center;gap:12px}
 .pastille-etat.hors{background:#ff8a6b;animation:none}
 @keyframes bat{70%{box-shadow:0 0 0 7px rgba(126,214,165,0)}100%{box-shadow:0 0 0 0 rgba(126,214,165,0)}}
 .btn-install{padding:7px 13px;font-size:13px}
+.btn-credits{padding:6px 12px;font-size:13px;min-height:34px;font-family:var(--mono);font-variant-numeric:tabular-nums}
+.btn.ia{border-color:rgba(255,217,143,.45);background:rgba(255,217,143,.08)}
+.btn.ia[disabled]{opacity:.55;cursor:progress}
+.mini-ia{margin-left:8px;border:1px solid var(--trait);background:transparent;color:var(--texte);border-radius:999px;min-width:40px;min-height:40px;font-size:15px;cursor:pointer}
+.panneau{position:fixed;inset:auto 0 0 0;max-height:88vh;overflow:auto;z-index:45;padding:18px max(18px,env(safe-area-inset-left,0px)) calc(24px + var(--bas));background:var(--nappe2);border-top:1px solid var(--trait);border-radius:26px 26px 0 0;transform:translateY(110%);transition:transform .45s cubic-bezier(.2,.8,.2,1);box-shadow:0 -30px 60px rgba(0,0,0,.55)}
+.panneau.ouvert{transform:none}
+.panneau h3{font:800 20px var(--display);margin:0 0 4px}
+.panneau .sous{color:var(--doux);font-size:14px;margin:0 0 12px}
+.solde{font:800 34px var(--display);letter-spacing:-.02em}
+.solde small{font:600 13px var(--mono);color:var(--doux);margin-left:6px}
+.paliers{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.palier{border:1px solid var(--trait);border-radius:16px;padding:12px 8px;background:rgba(255,255,255,.03);color:var(--texte);cursor:pointer;font:600 13px var(--corps);text-align:center}
+.palier b{display:block;font:800 18px var(--display)}
+.palier span{display:block;color:var(--doux);font-size:12px}
+.msg-ia{margin:10px 0;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--trait);white-space:pre-wrap;font-size:15px;line-height:1.5}
+.msg-ia.err{border-color:rgba(255,138,107,.5)}
+.msg-ia small{display:block;color:var(--doux);margin-top:8px;font-size:12px;white-space:normal}
+.hist{list-style:none;margin:8px 0 0;padding:0}
+.hist li{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-top:1px solid var(--trait);font-size:13px;color:var(--doux)}
+.hist li b{color:var(--texte);font-weight:600}
+.hist .plus{color:var(--famille)}
 
 /* Bandeau démo */
 .demo{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:14px;border:1px dashed var(--or);background:rgba(255,184,77,.08);font-size:14px}
@@ -179,6 +200,7 @@ h2{font:700 12px var(--corps);letter-spacing:.2em;text-transform:uppercase;color
     <div class="marque">Now<span>.</span></div>
     <div class="droite">
       <button class="btn btn-install" id="btnInstall" type="button" hidden data-t="installer">Installer</button>
+      <button class="btn btn-credits" id="btnCredits" type="button" hidden aria-label="Crédits IA" data-a="a_credits">🪙 <span id="soldeMini">0</span></button>
       <span class="pastille-etat" id="etat" title="Connexion"></span>
       <div class="horloge" id="horloge">--:--</div>
     </div>
@@ -218,6 +240,7 @@ h2{font:700 12px var(--corps);letter-spacing:.2em;text-transform:uppercase;color
         <div class="actions">
           <button class="btn fait" id="btnFait" type="button" data-t="fait">✓ Fait</button>
           <button class="btn" id="btnPlusTard" type="button" data-t="plus_tard">Plus tard</button>
+          <button class="btn ia" id="btnDeleguer" type="button" data-t="deleguer">🤖 Déléguer</button>
           <a class="btn" id="btnLien" target="_blank" rel="noopener" hidden data-t="ouvrir_lien">Ouvrir ↗</a>
         </div>
         <p class="astuce" data-t="astuce">Glisse la carte : → fait · ← plus tard</p>
@@ -236,6 +259,19 @@ h2{font:700 12px var(--corps);letter-spacing:.2em;text-transform:uppercase;color
     </section>
   </div>
 </main>
+
+<aside class="panneau" id="panneau" role="dialog" aria-modal="true" aria-label="Crédits IA" data-a="a_credits">
+  <h3 data-t="p_titre">Déléguer à l'IA</h3>
+  <p class="sous" data-t="p_sous">Tu paies seulement ce que l'IA consomme. Rien n'est envoyé à ta place : elle prépare, tu valides.</p>
+  <div class="solde"><span id="soldeGrand">0</span><small data-t="p_credits">crédits</small></div>
+  <div id="sortieIA" aria-live="polite"></div>
+  <h4 style="margin:14px 0 0;font:700 14px var(--corps);color:var(--doux)" data-t="p_recharger">Recharger</h4>
+  <div class="paliers" id="paliers"></div>
+  <p class="sous" id="noteTest" data-t="p_test">Paiement en mode test : aucune vraie carte n'est débitée.</p>
+  <h4 style="margin:10px 0 0;font:700 14px var(--corps);color:var(--doux)" data-t="p_histo">Historique</h4>
+  <ul class="hist" id="hist"></ul>
+  <button class="btn" id="fermerPanneau" type="button" style="margin-top:14px" data-t="fermer">Fermer</button>
+</aside>
 
 <aside class="feuille" id="feuille" aria-label="Installer Now sur iPhone" data-a="ios_titre">
   <h3 data-t="ios_titre">Installer Now sur l'iPhone</h3>
@@ -270,7 +306,14 @@ const TXT = {
     m_repos:'touche pour le focus', m_pause:'en pause · touche', m_focus:'une seule chose', m_fin:'bloc terminé · pause 5 min',
     e_phrase:'Phrase incorrecte. Vérifie les tirets et les lettres.', e_reseau:'Pas de connexion : réessaie en ligne.', e_change:'La phrase enregistrée ne marche plus (elle a changé ?). Entre la nouvelle.',
     s_demo:'Données d\'exemple, fictives.', s_donnees:(j, m, h, n, mo) => `Données du ${j}/${m} à ${h} · ${n} tâches · choix : ${mo === 'règles' ? 'règles de priorité' : 'IA ' + mo}.`,
-    faire:'Faire maintenant : ', en_ligne:'En ligne', hors_ligne:'Hors ligne : dernières données connues', locale:'fr-FR'},
+    faire:'Faire maintenant : ', en_ligne:'En ligne', hors_ligne:'Hors ligne : dernières données connues', locale:'fr-FR',
+    deleguer:'🤖 Déléguer', a_credits:'Crédits IA', p_titre:'Déléguer à l\'IA', p_sous:'Tu paies seulement ce que l\'IA consomme. Rien n\'est envoyé à ta place : elle prépare, tu valides.',
+    p_credits:'crédits', p_recharger:'Recharger', p_histo:'Historique', fermer:'Fermer', p_test:'Paiement en mode test : aucune vraie carte n\'est débitée.',
+    d_en_cours:'L\'IA travaille…', d_demo:'La délégation n\'est pas disponible en mode démo.', d_vide:'Solde vide. Recharge pour déléguer cette tâche.',
+    d_verif:'Contrôlé :', d_incert:'À confirmer :', d_cout:(c, u) => `Coût : ${c} crédit${c > 1 ? 's' : ''} (${u} $ de calcul réel).`,
+    e_ia:'L\'IA est indisponible, rien n\'a été débité. Réessaie dans un moment.', e_verif:'Le résultat n\'a pas passé la vérification : rien n\'a été débité.',
+    e_stripe:'Le paiement n\'est pas encore activé (en attente de la clé de test Stripe). Rien n\'a été débité.', e_serveur:'Service momentanément indisponible. Réessaie.',
+    h_recharge:'Recharge', h_deleg:'Délégation', devise:'€', locale_nb:'fr-FR', recu:'Paiement reçu, crédits ajoutés.', annule:'Paiement annulé.'},
   en: {passer:'Skip', installer:'Install', v_titre:'Your secret phrase', v_texte:'Your data is encrypted. Enter the phrase once: this phone will remember it.',
     ouvrir:'Unlock', voir_demo:'See the demo', demo:'<b>Demo mode</b>: these are <b>examples</b>, not your real tasks.', mes_donnees:'My data',
     maintenant:'Now', a_anneau:'Start or pause the 25-minute focus', tout_fait:'All done.', respire:'Breathe. Nothing urgent left.',
@@ -280,7 +323,14 @@ const TXT = {
     m_repos:'tap to focus', m_pause:'paused · tap', m_focus:'just one thing', m_fin:'block done · 5-min break',
     e_phrase:'Wrong phrase. Check the dashes and letters.', e_reseau:'No connection: try again online.', e_change:'The saved phrase no longer works (did it change?). Enter the new one.',
     s_demo:'Sample data, made up.', s_donnees:(j, m, h, n, mo) => `Data from ${m}/${j} at ${h} · ${n} tasks · picked by: ${mo === 'règles' ? 'priority rules' : 'AI ' + mo}.`,
-    faire:'Do now: ', en_ligne:'Online', hors_ligne:'Offline: last known data', locale:'en-GB'}};
+    faire:'Do now: ', en_ligne:'Online', hors_ligne:'Offline: last known data', locale:'en-GB',
+    deleguer:'🤖 Delegate', a_credits:'AI credits', p_titre:'Delegate to AI', p_sous:'You only pay for what the AI uses. Nothing is sent for you: it prepares, you approve.',
+    p_credits:'credits', p_recharger:'Top up', p_histo:'History', fermer:'Close', p_test:'Test-mode payment: no real card is charged.',
+    d_en_cours:'The AI is working…', d_demo:'Delegation is not available in demo mode.', d_vide:'Balance empty. Top up to delegate this task.',
+    d_verif:'Checked:', d_incert:'To confirm:', d_cout:(c, u) => `Cost: ${c} credit${c > 1 ? 's' : ''} ($${u} of real compute).`,
+    e_ia:'The AI is unavailable; nothing was charged. Try again shortly.', e_verif:'The result failed verification: nothing was charged.',
+    e_stripe:'Payment is not active yet (waiting for the Stripe test key). Nothing was charged.', e_serveur:'Service temporarily unavailable. Try again.',
+    h_recharge:'Top-up', h_deleg:'Delegation', devise:'$', locale_nb:'en-US', recu:'Payment received, credits added.', annule:'Payment cancelled.'}};
 const hashProfil = (location.hash.match(/^#(david|leeya)\b/) || [])[1];
 let PROFIL = hashProfil || lire('now-profil', null);
 let LANG = PROFILS[PROFIL] || (/^fr/i.test(navigator.language || '') ? 'fr' : 'en');
@@ -290,7 +340,7 @@ function appliquerLangue(lang) {
   document.querySelectorAll('[data-t]').forEach(e => e.textContent = T[e.dataset.t]);
   document.querySelectorAll('[data-h]').forEach(e => e.innerHTML = T[e.dataset.h]);
   document.querySelectorAll('[data-a]').forEach(e => e.setAttribute('aria-label', T[e.dataset.a]));
-  dessinerPrefs && dessinerPrefs();
+  dessinerPrefs && dessinerPrefs(); if (typeof dessinerPanneau === 'function') dessinerPanneau();
 }
 var dessinerPrefs = null;
 
@@ -332,6 +382,7 @@ async function charger(phrase) {
 
 /* ---------- État ---------- */
 let DATA = null, demo = false;
+let UID = null, COMPTE = null, delegation = false;   // crédits IA (voir plus bas)
 let faits = [], reportes = [], force = null;
 let boost = lire('now-boost', {famille:true, clients:true, argent:true, outils:false});
 const cleJour = () => 'now-' + (PROFIL || 'x') + '-' + DATA.genere.slice(0,10) + (demo ? '-demo' : '');
@@ -363,7 +414,7 @@ function afficher() {
   remplirCarte(x);
   $('file').innerHTML = L.slice(1, 7).map((t, i) => `<li tabindex="0" data-id="${esc(t.id)}" style="--i:${i}" aria-label="${esc(T.faire + t.titre)}">
     <span class="pastille" style="background:${COULEUR[t.pole] || 'var(--doux)'}" title="${esc(NOMS[t.pole] || '')}"></span>
-    <div><div class="t">${esc(t.titre)}</div><div class="d">${esc(t.detail || '')}</div></div><span class="quand">${esc(t.quand || '')}</span></li>`).join('');
+    <div><div class="t">${esc(t.titre)}</div><div class="d">${esc(t.detail || '')}</div></div><span class="quand">${esc(t.quand || '')}</span><button class="mini-ia" type="button" data-id="${esc(t.id)}" aria-label="${esc(T.deleguer)}">🤖</button></li>`).join('');
   const d = DATA.genere;
   $('source').textContent = demo ? T.s_demo : T.s_donnees(d.slice(8,10), d.slice(5,7), d.slice(11), DATA.taches.length, DATA.moteur);
   document.title = 'Now · ' + (x.titre.length > 28 ? x.titre.slice(0, 27) + '…' : x.titre);
@@ -463,7 +514,7 @@ appliquerLangue(LANG);
 /* ---------- Démarrage : verrou → application ---------- */
 function montrer(vue) { $('verrou').hidden = vue !== 'verrou'; $('appli').hidden = vue !== 'appli'; }
 function lancer(data, estDemo) {
-  DATA = data; demo = estDemo; chargerJour(); montrer('appli'); $('demo').hidden = !estDemo; afficher();
+  DATA = data; demo = estDemo; chargerJour(); montrer('appli'); $('demo').hidden = !estDemo; afficher(); majCompte && majCompte();
 }
 async function deverrouiller(phrase, silencieux) {
   try {
@@ -531,6 +582,61 @@ const ios = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform
 const installee = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
 if (ios && !installee && !lire('now-ios-vu', false)) setTimeout(() => $('feuille').classList.add('ouverte'), 6000);
 $('fermerFeuille').onclick = () => { $('feuille').classList.remove('ouverte'); ecrire('now-ios-vu', true); };
+
+/* ---------- Déléguer à l'IA + crédits (paiement à la consommation, Stripe en mode TEST) ---------- */
+const API = 'https://now-dreamnova-api.vercel.app/api';
+const sha = async s => [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)))].map(b => b.toString(16).padStart(2, '0')).join('');
+const nb = n => Number(n).toLocaleString(T.locale_nb);
+const prix = v => LANG === 'en' ? '$' + v.toFixed(2) : v.toFixed(2).replace('.', ',') + ' €';
+async function api(chemin, corps) {
+  try { const r = await fetch(API + chemin, corps ? {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify(corps)} : undefined); return {code:r.status, ...(await r.json())}; }
+  catch { return {code:0, ok:false, erreur:'reseau'}; }
+}
+async function majCompte() {
+  if (demo) { $('btnCredits').hidden = true; return; }
+  const p = lire('now-phrase', ''); if (!p) return;
+  UID = (await sha('now-uid:' + p)).slice(0, 24);
+  const r = await api('/account?uid=' + UID); if (!r.ok) return;
+  COMPTE = r; $('btnCredits').hidden = false; $('soldeMini').textContent = nb(r.credits); $('soldeGrand').textContent = nb(r.credits); dessinerPanneau();
+}
+function dessinerPanneau() {
+  if (!COMPTE) return;
+  const dev = COMPTE.devises[LANG] || 'usd';
+  $('paliers').innerHTML = ['s','m','l'].map(k => `<button class="palier" type="button" data-p="${k}"><b>${prix(COMPTE.paliers[k][dev])}</b><span>${nb(COMPTE.paliers[k].credits)} ${T.p_credits}</span></button>`).join('');
+  $('hist').innerHTML = (COMPTE.historique || []).map(h => h.type === 'recharge'
+    ? `<li><span><b>${T.h_recharge}</b></span><span class="plus">+${nb(h.delta)}</span></li>`
+    : `<li><span><b>${esc(h.titre || T.h_deleg)}</b><br>${esc((h.resultat || '').slice(0, 90))}${(h.resultat || '').length > 90 ? '…' : ''}</span><span>${nb(h.delta)}</span></li>`).join('');
+}
+function ouvrirPanneau() { $('panneau').classList.add('ouvert'); majCompte(); }
+$('btnCredits').onclick = ouvrirPanneau;
+$('fermerPanneau').onclick = () => $('panneau').classList.remove('ouvert');
+$('paliers').addEventListener('click', async e => {
+  const b = e.target.closest('.palier'); if (!b) return; b.disabled = true;
+  const r = await api('/checkout', {uid:UID, palier:b.dataset.p, lang:LANG, retour:location.origin + location.pathname});
+  b.disabled = false;
+  if (r.ok && r.url) location.href = r.url;
+  else $('sortieIA').innerHTML = `<div class="msg-ia err">${esc(r.erreur === 'stripe_non_configure' ? T.e_stripe : T.e_serveur)}</div>`;
+});
+async function deleguer(tache) {
+  if (demo) { ouvrirPanneau(); $('sortieIA').innerHTML = `<div class="msg-ia">${esc(T.d_demo)}</div>`; return; }
+  if (delegation) return; delegation = true; buzz(12);
+  const bouton = $('btnDeleguer'); bouton.disabled = true; ouvrirPanneau();
+  $('sortieIA').innerHTML = `<div class="msg-ia">${esc(T.d_en_cours)}</div>`;
+  const r = await api('/delegate', {uid:UID, lang:LANG, tache:{titre:tache.titre, detail:tache.detail || '', pole:tache.pole || ''}});
+  delegation = false; bouton.disabled = false;
+  if (r.ok) {
+    $('sortieIA').innerHTML = `<div class="msg-ia">${esc(r.resultat)}<small>${r.verifie.length ? '✓ ' + T.d_verif + ' ' + esc(r.verifie.join(' · ')) : ''}${r.incertitudes.length ? '<br>⚠ ' + T.d_incert + ' ' + esc(r.incertitudes.join(' · ')) : ''}<br>${T.d_cout(r.facture, r.cout_usd)}</small></div>`;
+    buzz([15, 30, 15]);
+  } else {
+    const m = r.erreur === 'solde_vide' ? T.d_vide : r.erreur === 'ia_indisponible' ? T.e_ia : r.erreur === 'verification_echouee' ? T.e_verif : T.e_serveur;
+    $('sortieIA').innerHTML = `<div class="msg-ia err">${esc(m)}</div>`;
+  }
+  majCompte();
+}
+$('btnDeleguer').onclick = () => { const x = classement()[0]; x && deleguer(x); };
+$('file').addEventListener('click', e => { const b = e.target.closest('.mini-ia'); if (!b) return; e.stopPropagation(); const x = DATA.taches.find(t => t.id === b.dataset.id); x && deleguer(x); }, true);
+addEventListener('load', () => { const q = location.search; if (/paye=1/.test(q)) setTimeout(() => { majCompte(); ouvrirPanneau(); $('sortieIA').innerHTML = `<div class="msg-ia">${esc(T.recu)}</div>`; history.replaceState(null, '', location.pathname + location.hash); }, 1500);
+  else if (/paye=0/.test(q)) { history.replaceState(null, '', location.pathname + location.hash); } });
 </script>
 </body>
 </html>
