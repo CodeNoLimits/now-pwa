@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Now</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a0e16">
+<meta name="description" content="Now : la seule chose à faire maintenant.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Now">
+<meta name="robots" content="noindex">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+/* Monde : salle de contrôle de nuit. Un seul objet vivant (l'orbe « maintenant »), tout le reste recule. */
+:root{
+  --nuit:#0a0e16; --nappe:#121a26; --nappe2:#172131; --trait:#243148; --texte:#f1f4f9; --doux:#94a2b8;
+  --or:#ffb84d; --or2:#ffd98f;
+  --famille:#7ed6a5; --clients:#7fb2ff; --argent:#ffb84d; --outils:#c3a6ff;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --corps:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,monospace;
+  --haut:env(safe-area-inset-top,0px); --bas:env(safe-area-inset-bottom,0px);
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{background:var(--nuit);-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100dvh;background:var(--nuit);color:var(--texte);font:16px/1.5 var(--corps);overflow-x:hidden;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit}
+[hidden]{display:none!important}
+
+/* Ambiance : deux nappes de lumière qui dérivent lentement */
+.ciel{position:fixed;inset:0;z-index:-1;overflow:hidden;background:var(--nuit)}
+.ciel i{position:absolute;width:90vmax;height:90vmax;border-radius:50%;filter:blur(70px);opacity:.5;will-change:transform}
+.ciel i:nth-child(1){left:-45vmax;top:-50vmax;background:radial-gradient(circle,rgba(255,184,77,.28),transparent 62%);animation:derive1 26s ease-in-out infinite alternate}
+.ciel i:nth-child(2){right:-55vmax;bottom:-55vmax;background:radial-gradient(circle,rgba(110,140,255,.22),transparent 62%);animation:derive2 32s ease-in-out infinite alternate}
+@keyframes derive1{to{transform:translate(18vmax,14vmax) scale(1.15)}}
+@keyframes derive2{to{transform:translate(-16vmax,-12vmax) scale(1.1)}}
+.grain{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+
+/* Intro */
+#intro{position:fixed;inset:0;z-index:50;background:#05070c;display:grid;place-items:center;transition:opacity .9s ease,visibility .9s}
+#intro.fin{opacity:0;visibility:hidden}
+#intro video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#intro .voile{position:absolute;inset:0;background:radial-gradient(90% 60% at 50% 50%,transparent,rgba(5,7,12,.55))}
+#passer{position:absolute;right:max(16px,env(safe-area-inset-right,0px));top:calc(14px + var(--haut));z-index:2;padding:9px 16px;border-radius:999px;border:1px solid rgba(255,255,255,.28);background:rgba(10,14,22,.45);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#fff;font-weight:700;font-size:14px;cursor:pointer}
+#passer:focus-visible{outline:3px solid var(--or);outline-offset:2px}
+#intro .mot{position:absolute;bottom:calc(14vh + var(--bas));font:800 clamp(40px,14vw,76px)/1 var(--display);letter-spacing:-.03em;opacity:0;transform:translateY(14px);transition:opacity 1.1s ease,transform 1.1s ease;color:#fff;text-shadow:0 0 40px rgba(255,184,77,.55)}
+#intro .mot b{color:var(--or);font-weight:800}
+#intro.mot-on .mot{opacity:1;transform:none}
+
+/* Cadre */
+.cadre{max-width:560px;margin:0 auto;padding:calc(14px + var(--haut)) max(16px,env(safe-area-inset-right,0px)) calc(48px + var(--bas)) max(16px,env(safe-area-inset-left,0px));display:grid;grid-template-columns:minmax(0,1fr);gap:22px;opacity:0;transition:opacity .8s ease .15s}
+body.pret .cadre{opacity:1}
+.cadre>*{min-width:0}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.marque{font:800 28px/1 var(--display);letter-spacing:-.03em}
+.marque span{color:var(--or)}
+.droite{display:flex;align-items:center;gap:10px}
+.horloge{font:600 13px var(--mono);color:var(--doux);font-variant-numeric:tabular-nums}
+.pastille-etat{width:8px;height:8px;border-radius:50%;background:var(--famille);box-shadow:0 0 0 0 rgba(126,214,165,.6);animation:bat 2.4s infinite}
+.pastille-etat.hors{background:#ff8a6b;animation:none}
+@keyframes bat{70%{box-shadow:0 0 0 7px rgba(126,214,165,0)}100%{box-shadow:0 0 0 0 rgba(126,214,165,0)}}
+.btn-install{padding:7px 13px;font-size:13px}
+
+/* Bandeau démo */
+.demo{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:14px;border:1px dashed var(--or);background:rgba(255,184,77,.08);font-size:14px}
+.demo b{color:var(--or)}
+.demo button{margin-left:auto;white-space:nowrap}
+
+/* L'instant */
+.instant{position:relative;display:grid;grid-template-columns:minmax(0,1fr);justify-items:center;gap:14px;padding:26px 20px 22px;border-radius:32px;
+  background:linear-gradient(180deg,rgba(255,184,77,.10),transparent 42%),linear-gradient(var(--nappe),var(--nappe));border:1px solid var(--trait);overflow:hidden;touch-action:pan-y;
+  box-shadow:0 30px 70px -40px rgba(255,184,77,.35),0 1px 0 rgba(255,255,255,.04) inset}
+.instant::before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;background:conic-gradient(from var(--ang,0deg),transparent 0 70%,rgba(255,184,77,.7) 85%,transparent 100%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:tour 9s linear infinite;pointer-events:none}
+@property --ang{syntax:"<angle>";initial-value:0deg;inherits:false}
+@keyframes tour{to{--ang:360deg}}
+.eti{font:700 12px var(--corps);letter-spacing:.2em;text-transform:uppercase;color:var(--or)}
+.anneau{width:min(224px,60vw);aspect-ratio:1;position:relative;display:grid;place-items:center;cursor:pointer;-webkit-user-select:none;user-select:none}
+.anneau svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);overflow:visible}
+.anneau circle{fill:none;stroke-width:3.2}
+.anneau .fond{stroke:var(--trait)}
+.anneau .prog{stroke:url(#deg);stroke-linecap:round;transition:stroke-dashoffset 1s linear;filter:drop-shadow(0 0 6px rgba(255,184,77,.7))}
+.orbe{position:absolute;inset:15%;border-radius:50%;background:radial-gradient(circle at 50% 42%,#fff3d3 0 8%,var(--or2) 22%,var(--or) 48%,rgba(255,184,77,0) 72%);animation:souffle 5.5s ease-in-out infinite;filter:blur(.3px)}
+.orbe::after{content:"";position:absolute;inset:-26%;border-radius:50%;border:1px solid rgba(255,184,77,.35);animation:onde 5.5s ease-out infinite}
+@keyframes souffle{0%,100%{transform:scale(.88);opacity:.8}50%{transform:scale(1.04);opacity:1}}
+@keyframes onde{0%{transform:scale(.7);opacity:.7}100%{transform:scale(1.25);opacity:0}}
+.anneau.focus .orbe{animation-duration:3.2s}
+.minuteur{position:relative;text-align:center;pointer-events:none;mix-blend-mode:normal}
+.minuteur b{display:block;font:800 44px/1 var(--display);font-variant-numeric:tabular-nums;letter-spacing:-.03em;color:#201404;text-shadow:0 0 18px rgba(255,235,190,.55)}
+.minuteur small{display:block;margin-top:2px;color:#3a2a0e;font-size:12px;font-weight:700;letter-spacing:.04em}
+.contenu{display:grid;justify-items:center;gap:12px;width:100%;will-change:transform,opacity}
+.phrase{font:800 clamp(23px,6.6vw,34px)/1.12 var(--display);overflow-wrap:anywhere;text-align:center;text-wrap:balance;letter-spacing:-.02em;margin:0}
+.pourquoi{color:var(--doux);text-align:center;margin:0;max-width:44ch;text-wrap:pretty;font-size:15px}
+.detail{font-size:14px;opacity:.86;text-align:center;margin:0;max-width:50ch;overflow-wrap:anywhere}
+.pole{display:inline-flex;align-items:center;gap:8px;font-size:12px;color:var(--doux);letter-spacing:.06em;text-transform:uppercase;font-weight:700}
+.actions{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:4px}
+.btn{font:700 15px var(--corps);border-radius:999px;padding:12px 20px;min-height:46px;border:1px solid var(--trait);background:rgba(255,255,255,.03);color:var(--texte);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:transform .15s,background .2s,border-color .2s}
+.btn:active{transform:scale(.95)}
+.btn:hover{border-color:#34466a}
+.btn:focus-visible{outline:3px solid var(--or);outline-offset:2px}
+.btn.fait{background:linear-gradient(180deg,#ffc767,var(--or));color:#1b1407;border-color:transparent;box-shadow:0 10px 26px -10px rgba(255,184,77,.8)}
+.astuce{font-size:12px;color:var(--doux);margin:0;opacity:.8}
+.part{position:absolute;width:8px;height:8px;border-radius:2px;pointer-events:none;animation:part 1s cubic-bezier(.1,.7,.3,1) forwards}
+@keyframes part{to{transform:translate(var(--dx),var(--dy)) rotate(300deg);opacity:0}}
+.vide{padding:28px 6px;text-align:center}
+.vide h1{font:800 34px/1.1 var(--display);margin:0 0 8px}
+
+/* Ensuite */
+h2{font:700 12px var(--corps);letter-spacing:.2em;text-transform:uppercase;color:var(--doux);margin:0 0 12px}
+.file{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.file li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:13px;align-items:center;padding:13px 15px;border-radius:18px;background:rgba(18,26,38,.78);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid var(--trait);cursor:pointer;
+  opacity:0;transform:translateY(14px);animation:monte .55s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(var(--i)*60ms);transition:border-color .2s,background .2s}
+.file li:hover{border-color:#3a4d73}
+.file li:active{transform:scale(.985)}
+.file li:focus-visible{outline:3px solid var(--or);outline-offset:2px}
+@keyframes monte{to{opacity:1;transform:none}}
+.file .t{font-weight:700;overflow-wrap:anywhere;font-size:15px;line-height:1.3}
+.file .d{font-size:13px;color:var(--doux);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;margin-top:2px}
+.pastille{width:10px;height:10px;border-radius:50%;flex:none}
+.quand{font:600 12px var(--mono);color:var(--doux);white-space:nowrap}
+.file .num{font:800 13px var(--display);color:var(--doux);width:18px;text-align:center}
+
+/* Préférences */
+.prefs{display:flex;flex-wrap:wrap;gap:8px}
+.prefs label{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:999px;border:1px solid var(--trait);font-size:14px;cursor:pointer;background:rgba(255,255,255,.02);transition:background .2s,border-color .2s,transform .15s}
+.prefs label:active{transform:scale(.95)}
+.prefs label:has(input:checked){background:rgba(255,184,77,.12);border-color:rgba(255,184,77,.55)}
+.prefs input{accent-color:var(--or);width:16px;height:16px;margin:0}
+.note{font-size:12px;color:var(--doux);margin:10px 0 0}
+
+/* Écran de verrouillage */
+.verrou{display:grid;gap:14px;justify-items:center;text-align:center;padding:34px 20px;border-radius:32px;border:1px solid var(--trait);background:var(--nappe)}
+.verrou .orbe-s{width:84px;height:84px;position:relative}
+.verrou .orbe-s .orbe{inset:0}
+.verrou h1{font:800 28px/1.1 var(--display);margin:0}
+.verrou p{margin:0;color:var(--doux);max-width:38ch}
+.verrou form{display:grid;gap:10px;width:100%;max-width:340px}
+.verrou input{font:600 17px var(--mono);letter-spacing:.06em;text-align:center;padding:14px;border-radius:16px;border:1px solid var(--trait);background:var(--nuit);color:var(--texte);width:100%}
+.verrou input:focus{outline:3px solid var(--or);outline-offset:1px;border-color:var(--or)}
+.erreur{color:#ff9a7a;font-size:14px;min-height:1.3em}
+.secoue{animation:secoue .4s}
+@keyframes secoue{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+
+/* Feuille d'installation iOS */
+.feuille{position:fixed;left:0;right:0;bottom:0;z-index:40;padding:18px max(18px,env(safe-area-inset-left,0px)) calc(20px + var(--bas));background:var(--nappe2);border-top:1px solid var(--trait);border-radius:26px 26px 0 0;transform:translateY(110%);transition:transform .5s cubic-bezier(.2,.8,.2,1);box-shadow:0 -30px 60px rgba(0,0,0,.5)}
+.feuille.ouverte{transform:none}
+.feuille h3{font:800 20px var(--display);margin:0 0 6px}
+.feuille ol{margin:8px 0 14px;padding-left:20px;color:var(--doux)}
+.feuille ol b{color:var(--texte)}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;transition-delay:0s!important}
+  .file li{opacity:1;transform:none}
+  .ciel i{animation:none}
+}
+</style>
+</head>
+<body>
+<div class="ciel" aria-hidden="true"><i></i><i></i></div><div class="grain" aria-hidden="true"></div>
+
+<div id="intro" hidden>
+  <video id="vid" muted playsinline webkit-playsinline preload="auto" poster="intro/poster.jpg" aria-hidden="true">
+    <source src="intro/intro.webm" type="video/webm">
+    <source src="intro/intro.mp4" type="video/mp4">
+  </video>
+  <div class="voile"></div>
+  <div class="mot" aria-hidden="true">Now<b>.</b></div>
+  <button id="passer" type="button">Passer</button>
+</div>
+
+<main class="cadre" id="cadre">
+  <header>
+    <div class="marque">Now<span>.</span></div>
+    <div class="droite">
+      <button class="btn btn-install" id="btnInstall" type="button" hidden>Installer</button>
+      <span class="pastille-etat" id="etat" title="Connexion"></span>
+      <div class="horloge" id="horloge">--:--</div>
+    </div>
+  </header>
+
+  <section class="verrou" id="verrou" hidden>
+    <div class="orbe-s"><div class="orbe"></div></div>
+    <h1>Ta phrase secrète</h1>
+    <p>Tes données sont chiffrées. Entre la phrase une seule fois : ce téléphone la gardera.</p>
+    <form id="formPhrase" autocomplete="off">
+      <input id="phrase" type="text" inputmode="text" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="xxxx-xxxx-xxxx-xxxx" aria-label="Phrase secrète">
+      <button class="btn fait" type="submit" style="justify-content:center">Déverrouiller</button>
+      <button class="btn" type="button" id="btnDemo" style="justify-content:center">Voir la démo</button>
+    </form>
+    <div class="erreur" id="erreur" role="alert"></div>
+  </section>
+
+  <div id="appli" hidden>
+    <div class="demo" id="demo" hidden><span>🧪</span><span><b>Mode démo</b> : ce sont des <b>exemples</b>, pas tes vraies tâches.</span><button class="btn btn-install" id="btnVrai" type="button">Mes données</button></div>
+
+    <section class="instant" id="instant" aria-live="polite" style="margin-top:22px">
+      <div class="eti" id="eti">Maintenant</div>
+      <div class="anneau" id="anneau" role="button" tabindex="0" aria-label="Lancer ou mettre en pause le focus de 25 minutes">
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <defs><linearGradient id="deg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd98f"/><stop offset="1" stop-color="#ff9a3d"/></linearGradient></defs>
+          <circle class="fond" cx="50" cy="50" r="46"/><circle class="prog" id="prog" cx="50" cy="50" r="46" stroke-dasharray="289" stroke-dashoffset="0"/>
+        </svg>
+        <div class="orbe"></div>
+        <div class="minuteur"><b id="temps">25:00</b><small id="etatMin">touche pour le focus</small></div>
+      </div>
+      <div class="vide" id="vide" hidden><h1>Tout est fait.</h1><p class="pourquoi">Respire. Il n'y a plus rien d'urgent.</p></div>
+      <div class="contenu" id="contenu">
+        <div class="pole" id="pole"></div>
+        <h1 class="phrase" id="phraseT">…</h1>
+        <p class="pourquoi" id="pourquoi"></p>
+        <p class="detail" id="detail"></p>
+        <div class="actions">
+          <button class="btn fait" id="btnFait" type="button">✓ Fait</button>
+          <button class="btn" id="btnPlusTard" type="button">Plus tard</button>
+          <a class="btn" id="btnLien" target="_blank" rel="noopener" hidden>Ouvrir ↗</a>
+        </div>
+        <p class="astuce">Glisse la carte : → fait · ← plus tard</p>
+      </div>
+    </section>
+
+    <section style="margin-top:22px">
+      <h2>Ensuite</h2>
+      <ol class="file" id="file"></ol>
+    </section>
+
+    <section style="margin-top:22px">
+      <h2>Ce qui compte aujourd'hui</h2>
+      <div class="prefs" id="prefs"></div>
+      <p class="note" id="source"></p>
+    </section>
+  </div>
+</main>
+
+<aside class="feuille" id="feuille" aria-label="Installer Now sur iPhone">
+  <h3>Installer Now sur l'iPhone</h3>
+  <ol>
+    <li>Touche <b>Partager</b> (le carré avec la flèche, en bas de Safari)</li>
+    <li>Choisis <b>Sur l'écran d'accueil</b></li>
+    <li>Touche <b>Ajouter</b></li>
+  </ol>
+  <button class="btn" id="fermerFeuille" type="button">Compris</button>
+</aside>
+
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const lire = (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v) } catch { return d } };
+const ecrire = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)) } catch {} };
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const calme = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const buzz = n => { try { navigator.vibrate && navigator.vibrate(n) } catch {} };
+
+const COULEUR = {famille:'var(--famille)', clients:'var(--clients)', argent:'var(--argent)', outils:'var(--outils)'};
+const NOMS = {famille:'Famille', clients:'Clients', argent:'Argent', outils:'Outils'};
+
+/* ---------- Données d'exemple (mode démo) : fictives, jamais mélangées aux vraies ---------- */
+const DEMO = {genere: new Date().toISOString().slice(0,16).replace('T',' '), moteur:'exemple', exemple:true, taches:[
+  {id:'d1', pole:'famille', titre:'Visiter l\'appartement de la rue des Lilas', detail:'Exemple · 15:30 · prends les papiers du bail', quand:'15:30', score:90, phrase:'Prépare-toi : la visite de 15 h 30 approche.', pourquoi:'Un rendez-vous fixe passe toujours devant.'},
+  {id:'d2', pole:'clients', titre:'Répondre à Sarah (devis site vitrine)', detail:'Exemple · elle attend depuis 40 min', quand:'il y a 40 min', score:70},
+  {id:'d3', pole:'argent', titre:'Envoyer la facture du projet Alpha', detail:'Exemple · 1 200 € à encaisser cette semaine', quand:'aujourd\'hui', score:60},
+  {id:'d4', pole:'outils', titre:'Mettre à jour le téléphone', detail:'Exemple · 10 minutes, à faire une fois', quand:'ce soir', score:30},
+  {id:'d5', pole:'clients', titre:'Appeler Daniel pour le brief', detail:'Exemple · créneau 17 h 30', quand:'17:30', score:55},
+  {id:'d6', pole:'famille', titre:'Acheter le gâteau d\'anniversaire', detail:'Exemple · avant 19 h', quand:'avant 19:00', score:50}]};
+
+/* ---------- Déchiffrement : PBKDF2-SHA256 → AES-GCM (WebCrypto) ---------- */
+const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+async function dechiffrer(enc, phrase) {
+  const mat = await crypto.subtle.importKey('raw', new TextEncoder().encode(phrase), 'PBKDF2', false, ['deriveKey']);
+  const cle = await crypto.subtle.deriveKey({name:'PBKDF2', salt:b64(enc.salt), iterations:enc.iter, hash:'SHA-256'}, mat, {name:'AES-GCM', length:256}, false, ['decrypt']);
+  const clair = await crypto.subtle.decrypt({name:'AES-GCM', iv:b64(enc.iv)}, cle, b64(enc.ct));
+  return JSON.parse(new TextDecoder().decode(clair));
+}
+const normaliser = p => p.trim().toLowerCase().replace(/\s+/g, '');
+async function charger(phrase) {
+  const r = await fetch('now.enc.json', {cache:'no-store'});
+  if (!r.ok) throw new Error('données indisponibles');
+  return dechiffrer(await r.json(), phrase);
+}
+
+/* ---------- État ---------- */
+let DATA = null, demo = false;
+let faits = [], reportes = [], force = null;
+let boost = lire('now-boost', {famille:true, clients:true, argent:true, outils:false});
+const cleJour = () => 'now-' + DATA.genere.slice(0,10) + (demo ? '-demo' : '');
+function chargerJour() { faits = lire(cleJour() + '-faits', []); reportes = lire(cleJour() + '-reportes', []); force = null; }
+
+function classement() {
+  const t = DATA.taches.filter(x => !faits.includes(x.id));
+  const premier = DATA.taches[0];
+  const score = x => (x.score_final ?? x.score) * (boost[x.pole] ? 1.15 : .85) - (reportes.includes(x.id) ? 40 : 0)
+                   + (x.id === premier.id && !reportes.includes(x.id) ? 25 : 0) + (x.id === force ? 1000 : 0);
+  return t.sort((a, b) => score(b) - score(a));
+}
+
+/* ---------- Affichage ---------- */
+function remplirCarte(x) {
+  const tete = x.id === DATA.taches[0].id;
+  $('pole').innerHTML = `<span class="pastille" style="background:${COULEUR[x.pole] || 'var(--doux)'}"></span>${esc(NOMS[x.pole] || '')}${x.quand ? ' · ' + esc(x.quand) : ''}`;
+  $('phraseT').textContent = tete && x.phrase ? x.phrase : x.titre;
+  $('pourquoi').textContent = tete && x.pourquoi ? x.pourquoi : '';
+  $('detail').textContent = x.detail || '';
+  const l = $('btnLien'); l.hidden = !x.lien; if (x.lien) l.href = x.lien;
+}
+function afficher() {
+  const L = classement(), x = L[0];
+  if (!x) {
+    $('contenu').hidden = true; $('vide').hidden = false; $('file').innerHTML = ''; return;
+  }
+  $('contenu').hidden = false; $('vide').hidden = true;
+  remplirCarte(x);
+  $('file').innerHTML = L.slice(1, 7).map((t, i) => `<li tabindex="0" data-id="${esc(t.id)}" style="--i:${i}" aria-label="Faire maintenant : ${esc(t.titre)}">
+    <span class="pastille" style="background:${COULEUR[t.pole] || 'var(--doux)'}" title="${esc(NOMS[t.pole] || '')}"></span>
+    <div><div class="t">${esc(t.titre)}</div><div class="d">${esc(t.detail || '')}</div></div><span class="quand">${esc(t.quand || '')}</span></li>`).join('');
+  const d = DATA.genere;
+  $('source').textContent = demo ? 'Données d\'exemple, fictives.' :
+    `Données du ${d.slice(8,10)}/${d.slice(5,7)} à ${d.slice(11)} · ${DATA.taches.length} tâches · choix : ${DATA.moteur === 'règles' ? 'règles de priorité' : 'IA ' + DATA.moteur}.`;
+  document.title = 'Now · ' + (x.titre.length > 28 ? x.titre.slice(0, 27) + '…' : x.titre);
+}
+
+/* Transition entre deux tâches : la carte sort d'un côté, la suivante arrive de l'autre */
+async function changer(sortie, apres) {
+  const c = $('contenu');
+  if (calme || !c.animate) { apres(); afficher(); return; }
+  const dx = sortie === 'droite' ? 90 : sortie === 'gauche' ? -90 : 0, dy = sortie === 'haut' ? -50 : 0;
+  await c.animate([{opacity:1, transform:'none'}, {opacity:0, transform:`translate(${dx}px,${dy}px) scale(.96)`}], {duration:240, easing:'ease-in'}).finished.catch(() => {});
+  apres(); afficher();
+  c.animate([{opacity:0, transform:`translate(${-dx * .6}px,26px) scale(.97)`}, {opacity:1, transform:'none'}], {duration:520, easing:'cubic-bezier(.2,.8,.2,1)'});
+}
+function confettis() {
+  if (calme) return;
+  const inst = $('instant'), cols = ['#ffb84d','#7ed6a5','#7fb2ff','#c3a6ff','#fff3d3'];
+  for (let i = 0; i < 34; i++) {
+    const p = document.createElement('span'); p.className = 'part';
+    p.style.left = '50%'; p.style.top = '30%'; p.style.background = cols[i % 5];
+    p.style.setProperty('--dx', (Math.random() * 340 - 170) + 'px'); p.style.setProperty('--dy', (Math.random() * -200 + 20) + 'px');
+    inst.appendChild(p); setTimeout(() => p.remove(), 1000);
+  }
+}
+function fait() {
+  const x = classement()[0]; if (!x) return;
+  buzz(25); confettis(); arreter();
+  changer('droite', () => { faits.push(x.id); ecrire(cleJour() + '-faits', faits); force = null; });
+}
+function plusTard() {
+  const x = classement()[0]; if (!x) return;
+  buzz(12); arreter();
+  changer('gauche', () => { reportes.push(x.id); ecrire(cleJour() + '-reportes', reportes); force = null; });
+}
+$('btnFait').onclick = fait; $('btnPlusTard').onclick = plusTard;
+
+/* Geste : glisser la carte vers la droite = fait, vers la gauche = plus tard */
+(() => {
+  const inst = $('instant'); let x0 = null, y0 = 0, dx = 0, actif = false;
+  inst.addEventListener('pointerdown', e => { if (e.target.closest('button,a,.anneau')) return; x0 = e.clientX; y0 = e.clientY; dx = 0; actif = false; });
+  inst.addEventListener('pointermove', e => {
+    if (x0 === null) return; const mx = e.clientX - x0, my = e.clientY - y0;
+    if (!actif && Math.abs(mx) > 10 && Math.abs(mx) > Math.abs(my) * 1.4) { actif = true; try { inst.setPointerCapture(e.pointerId) } catch {} }
+    if (!actif) return; dx = mx;
+    $('contenu').style.transform = `translateX(${dx * .6}px) rotate(${dx / 40}deg)`; $('contenu').style.opacity = String(1 - Math.min(Math.abs(dx) / 320, .5));
+  });
+  const fin = () => {
+    if (x0 === null) return; const d = dx; x0 = null;
+    const c = $('contenu'); c.style.transform = ''; c.style.opacity = '';
+    if (actif && Math.abs(d) > 110) d > 0 ? fait() : plusTard();
+    else if (actif && c.animate && !calme) c.animate([{transform:`translateX(${d * .6}px)`}, {transform:'none'}], {duration:300, easing:'cubic-bezier(.2,.8,.2,1)'});
+    actif = false;
+  };
+  inst.addEventListener('pointerup', fin); inst.addEventListener('pointercancel', fin);
+})();
+
+/* Toucher une tâche de la file = la faire passer devant */
+$('file').addEventListener('click', e => { const li = e.target.closest('li'); if (li) passerDevant(li.dataset.id); });
+$('file').addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { const li = e.target.closest('li'); if (li) { e.preventDefault(); passerDevant(li.dataset.id) } } });
+function passerDevant(id) { buzz(10); arreter(); window.scrollTo({top:0, behavior: calme ? 'auto' : 'smooth'}); changer('haut', () => { force = id }); }
+
+/* ---------- Focus 25 min ---------- */
+const TOTAL = 25 * 60; let reste = TOTAL, fin = null, tic = null;
+function dessiner() {
+  const s = Math.max(0, reste);
+  $('temps').textContent = String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+  $('prog').style.strokeDashoffset = 289 * (1 - s / TOTAL);
+}
+function arreter() { clearInterval(tic); tic = null; fin = null; reste = TOTAL; $('anneau').classList.remove('focus'); $('etatMin').textContent = 'touche pour le focus'; dessiner(); }
+function basculerFocus() {
+  if (tic) { clearInterval(tic); tic = null; fin = null; $('anneau').classList.remove('focus'); $('etatMin').textContent = 'en pause · touche'; return; }
+  buzz(15); fin = Date.now() + reste * 1000; $('anneau').classList.add('focus'); $('etatMin').textContent = 'une seule chose';
+  tic = setInterval(() => {
+    reste = Math.round((fin - Date.now()) / 1000); dessiner();   // horloge murale : reste juste même si l'onglet dort
+    if (reste <= 0) { arreter(); $('etatMin').textContent = 'bloc terminé · pause 5 min'; confettis(); buzz([80, 60, 80]); }
+  }, 500);
+}
+$('anneau').onclick = basculerFocus;
+$('anneau').onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); basculerFocus() } };
+
+/* ---------- Préférences ---------- */
+$('prefs').innerHTML = Object.keys(NOMS).map(k => `<label for="p-${k}"><input type="checkbox" id="p-${k}" ${boost[k] ? 'checked' : ''}>
+  <span class="pastille" style="background:${COULEUR[k]}"></span>${NOMS[k]}</label>`).join('');
+Object.keys(NOMS).forEach(k => $('p-' + k).onchange = e => { buzz(8); boost[k] = e.target.checked; ecrire('now-boost', boost); changer('haut', () => {}); });
+
+/* ---------- Horloge et connexion ---------- */
+const heure = () => new Date().toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit', timeZone:'Asia/Jerusalem'});
+const majHorloge = () => $('horloge').textContent = heure();
+setInterval(majHorloge, 15000); majHorloge();
+const majEtat = () => { $('etat').classList.toggle('hors', !navigator.onLine); $('etat').title = navigator.onLine ? 'En ligne' : 'Hors ligne : dernières données connues'; };
+addEventListener('online', majEtat); addEventListener('offline', majEtat); majEtat();
+
+/* ---------- Démarrage : verrou → application ---------- */
+function montrer(vue) { $('verrou').hidden = vue !== 'verrou'; $('appli').hidden = vue !== 'appli'; }
+function lancer(data, estDemo) {
+  DATA = data; demo = estDemo; chargerJour(); montrer('appli'); $('demo').hidden = !estDemo; afficher();
+}
+async function deverrouiller(phrase, silencieux) {
+  try {
+    const d = await charger(normaliser(phrase));
+    ecrire('now-phrase', normaliser(phrase)); lancer(d, false); return true;
+  } catch (e) {
+    if (!silencieux) {
+      $('erreur').textContent = navigator.onLine ? 'Phrase incorrecte. Vérifie les tirets et les lettres.' : 'Pas de connexion : réessaie en ligne.';
+      const f = $('formPhrase'); f.classList.remove('secoue'); void f.offsetWidth; f.classList.add('secoue'); buzz([40, 40, 40]);
+    }
+    return false;
+  }
+}
+$('formPhrase').onsubmit = async e => { e.preventDefault(); $('erreur').textContent = ''; const b = e.submitter; b && (b.disabled = true); await deverrouiller($('phrase').value, false); b && (b.disabled = false); };
+$('btnDemo').onclick = () => lancer(DEMO, true);
+$('btnVrai').onclick = () => { const p = lire('now-phrase', ''); p ? deverrouiller(p, false).then(ok => { if (!ok) montrer('verrou') }) : montrer('verrou'); };
+
+async function demarrer() {
+  // Lien d'installation avec la phrase dans le fragment (#k=…) : le fragment ne part jamais vers le serveur.
+  const m = location.hash.match(/k=([^&]+)/);
+  if (m) { ecrire('now-phrase', normaliser(decodeURIComponent(m[1]))); history.replaceState(null, '', location.pathname); }
+  const p = lire('now-phrase', '');
+  if (p && await deverrouiller(p, true)) return;
+  if (p) $('erreur').textContent = 'La phrase enregistrée ne marche plus (elle a changé ?). Entre la nouvelle.';
+  montrer('verrou');
+}
+// Rafraîchit les données quand l'appli revient au premier plan (toutes les 5 min au plus)
+let derniere = Date.now();
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState !== 'visible' || demo || !DATA || Date.now() - derniere < 300000) return;
+  derniere = Date.now(); const p = lire('now-phrase', '');
+  p && charger(p).then(d => { if (d.genere !== DATA.genere) { DATA = d; chargerJour(); afficher(); } }).catch(() => {});
+});
+
+/* ---------- Intro vidéo puis fondu vers l'écran Maintenant ---------- */
+function ouvrirAppli() {
+  const intro = $('intro'); if (document.body.classList.contains('pret')) return;
+  document.body.classList.add('pret'); intro.classList.add('fin'); setTimeout(() => { intro.hidden = true; try { $('vid').pause() } catch {} }, 1000);
+  try { sessionStorage.setItem('now-intro', '1') } catch {}
+}
+(() => {
+  let deja = false; try { deja = sessionStorage.getItem('now-intro') === '1' } catch {}
+  const intro = $('intro'), v = $('vid');
+  if (calme || deja) { document.body.classList.add('pret'); demarrer(); return; }
+  intro.hidden = false; demarrer();
+  $('passer').onclick = ouvrirAppli;
+  let lance = false;
+  const garde = setTimeout(ouvrirAppli, 9000);           // filet de sécurité : jamais bloqué sur l'intro
+  v.addEventListener('ended', () => { clearTimeout(garde); ouvrirAppli() });
+  v.addEventListener('timeupdate', () => { if (v.duration && v.currentTime > v.duration - 1.6) intro.classList.add('mot-on') });
+  v.addEventListener('error', () => { clearTimeout(garde); setTimeout(ouvrirAppli, 600) });
+  v.addEventListener('playing', () => { lance = true });
+  const p = v.play(); if (p && p.catch) p.catch(() => { clearTimeout(garde); intro.classList.add('mot-on'); setTimeout(ouvrirAppli, 1800) });
+})();
+
+/* ---------- PWA : installation et hors-ligne ---------- */
+if ('serviceWorker' in navigator) addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+let invite = null;
+addEventListener('beforeinstallprompt', e => { e.preventDefault(); invite = e; $('btnInstall').hidden = false; });
+$('btnInstall').onclick = async () => { if (invite) { invite.prompt(); await invite.userChoice.catch(() => {}); invite = null; $('btnInstall').hidden = true } };
+addEventListener('appinstalled', () => { $('btnInstall').hidden = true; });
+const ios = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const installee = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+if (ios && !installee && !lire('now-ios-vu', false)) setTimeout(() => $('feuille').classList.add('ouverte'), 6000);
+$('fermerFeuille').onclick = () => { $('feuille').classList.remove('ouverte'); ecrire('now-ios-vu', true); };
+</script>
+</body>
+</html>
