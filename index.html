@@ -171,14 +171,14 @@ h2{font:700 12px var(--corps);letter-spacing:.2em;text-transform:uppercase;color
   </video>
   <div class="voile"></div>
   <div class="mot" aria-hidden="true">Now<b>.</b></div>
-  <button id="passer" type="button">Passer</button>
+  <button id="passer" type="button" data-t="passer">Passer</button>
 </div>
 
 <main class="cadre" id="cadre">
   <header>
     <div class="marque">Now<span>.</span></div>
     <div class="droite">
-      <button class="btn btn-install" id="btnInstall" type="button" hidden>Installer</button>
+      <button class="btn btn-install" id="btnInstall" type="button" hidden data-t="installer">Installer</button>
       <span class="pastille-etat" id="etat" title="Connexion"></span>
       <div class="horloge" id="horloge">--:--</div>
     </div>
@@ -186,65 +186,65 @@ h2{font:700 12px var(--corps);letter-spacing:.2em;text-transform:uppercase;color
 
   <section class="verrou" id="verrou" hidden>
     <div class="orbe-s"><div class="orbe"></div></div>
-    <h1>Ta phrase secrète</h1>
-    <p>Tes données sont chiffrées. Entre la phrase une seule fois : ce téléphone la gardera.</p>
+    <h1 data-t="v_titre">Ta phrase secrète</h1>
+    <p data-t="v_texte">Tes données sont chiffrées. Entre la phrase une seule fois : ce téléphone la gardera.</p>
     <form id="formPhrase" autocomplete="off">
-      <input id="phrase" type="text" inputmode="text" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="xxxx-xxxx-xxxx-xxxx" aria-label="Phrase secrète">
-      <button class="btn fait" type="submit" style="justify-content:center">Déverrouiller</button>
-      <button class="btn" type="button" id="btnDemo" style="justify-content:center">Voir la démo</button>
+      <input id="phrase" type="text" inputmode="text" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="xxxx-xxxx-xxxx-xxxx" aria-label="Phrase secrète" data-a="v_titre">
+      <button class="btn fait" type="submit" style="justify-content:center" data-t="ouvrir">Déverrouiller</button>
+      <button class="btn" type="button" id="btnDemo" style="justify-content:center" data-t="voir_demo">Voir la démo</button>
     </form>
     <div class="erreur" id="erreur" role="alert"></div>
   </section>
 
   <div id="appli" hidden>
-    <div class="demo" id="demo" hidden><span>🧪</span><span><b>Mode démo</b> : ce sont des <b>exemples</b>, pas tes vraies tâches.</span><button class="btn btn-install" id="btnVrai" type="button">Mes données</button></div>
+    <div class="demo" id="demo" hidden><span>🧪</span><span data-h="demo"><b>Mode démo</b> : ce sont des <b>exemples</b>, pas tes vraies tâches.</span><button class="btn btn-install" id="btnVrai" type="button" data-t="mes_donnees">Mes données</button></div>
 
     <section class="instant" id="instant" aria-live="polite" style="margin-top:22px">
-      <div class="eti" id="eti">Maintenant</div>
-      <div class="anneau" id="anneau" role="button" tabindex="0" aria-label="Lancer ou mettre en pause le focus de 25 minutes">
+      <div class="eti" id="eti" data-t="maintenant">Maintenant</div>
+      <div class="anneau" id="anneau" role="button" tabindex="0" aria-label="Lancer ou mettre en pause le focus de 25 minutes" data-a="a_anneau">
         <svg viewBox="0 0 100 100" aria-hidden="true">
           <defs><linearGradient id="deg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd98f"/><stop offset="1" stop-color="#ff9a3d"/></linearGradient></defs>
           <circle class="fond" cx="50" cy="50" r="46"/><circle class="prog" id="prog" cx="50" cy="50" r="46" stroke-dasharray="289" stroke-dashoffset="0"/>
         </svg>
         <div class="orbe"></div>
-        <div class="minuteur"><b id="temps">25:00</b><small id="etatMin">touche pour le focus</small></div>
+        <div class="minuteur"><b id="temps">25:00</b><small id="etatMin" data-t="m_repos">touche pour le focus</small></div>
       </div>
-      <div class="vide" id="vide" hidden><h1>Tout est fait.</h1><p class="pourquoi">Respire. Il n'y a plus rien d'urgent.</p></div>
+      <div class="vide" id="vide" hidden><h1 data-t="tout_fait">Tout est fait.</h1><p class="pourquoi" data-t="respire">Respire. Il n'y a plus rien d'urgent.</p></div>
       <div class="contenu" id="contenu">
         <div class="pole" id="pole"></div>
         <h1 class="phrase" id="phraseT">…</h1>
         <p class="pourquoi" id="pourquoi"></p>
         <p class="detail" id="detail"></p>
         <div class="actions">
-          <button class="btn fait" id="btnFait" type="button">✓ Fait</button>
-          <button class="btn" id="btnPlusTard" type="button">Plus tard</button>
-          <a class="btn" id="btnLien" target="_blank" rel="noopener" hidden>Ouvrir ↗</a>
+          <button class="btn fait" id="btnFait" type="button" data-t="fait">✓ Fait</button>
+          <button class="btn" id="btnPlusTard" type="button" data-t="plus_tard">Plus tard</button>
+          <a class="btn" id="btnLien" target="_blank" rel="noopener" hidden data-t="ouvrir_lien">Ouvrir ↗</a>
         </div>
-        <p class="astuce">Glisse la carte : → fait · ← plus tard</p>
+        <p class="astuce" data-t="astuce">Glisse la carte : → fait · ← plus tard</p>
       </div>
     </section>
 
     <section style="margin-top:22px">
-      <h2>Ensuite</h2>
+      <h2 data-t="ensuite">Ensuite</h2>
       <ol class="file" id="file"></ol>
     </section>
 
     <section style="margin-top:22px">
-      <h2>Ce qui compte aujourd'hui</h2>
+      <h2 data-t="compte">Ce qui compte aujourd'hui</h2>
       <div class="prefs" id="prefs"></div>
       <p class="note" id="source"></p>
     </section>
   </div>
 </main>
 
-<aside class="feuille" id="feuille" aria-label="Installer Now sur iPhone">
-  <h3>Installer Now sur l'iPhone</h3>
-  <ol>
+<aside class="feuille" id="feuille" aria-label="Installer Now sur iPhone" data-a="ios_titre">
+  <h3 data-t="ios_titre">Installer Now sur l'iPhone</h3>
+  <ol data-h="ios_etapes">
     <li>Touche <b>Partager</b> (le carré avec la flèche, en bas de Safari)</li>
     <li>Choisis <b>Sur l'écran d'accueil</b></li>
     <li>Touche <b>Ajouter</b></li>
   </ol>
-  <button class="btn" id="fermerFeuille" type="button">Compris</button>
+  <button class="btn" id="fermerFeuille" type="button" data-t="compris">Compris</button>
 </aside>
 
 <script>
@@ -257,7 +257,42 @@ const calme = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const buzz = n => { try { navigator.vibrate && navigator.vibrate(n) } catch {} };
 
 const COULEUR = {famille:'var(--famille)', clients:'var(--clients)', argent:'var(--argent)', outils:'var(--outils)'};
-const NOMS = {famille:'Famille', clients:'Clients', argent:'Argent', outils:'Outils'};
+
+/* ---------- Profils : un fichier chiffré et une phrase par personne ; langue de l'interface = celle du profil ---------- */
+const PROFILS = {david:'fr', leeya:'en'};
+const TXT = {
+  fr: {passer:'Passer', installer:'Installer', v_titre:'Ta phrase secrète', v_texte:'Tes données sont chiffrées. Entre la phrase une seule fois : ce téléphone la gardera.',
+    ouvrir:'Déverrouiller', voir_demo:'Voir la démo', demo:'<b>Mode démo</b> : ce sont des <b>exemples</b>, pas tes vraies tâches.', mes_donnees:'Mes données',
+    maintenant:'Maintenant', a_anneau:'Lancer ou mettre en pause le focus de 25 minutes', tout_fait:'Tout est fait.', respire:'Respire. Il n\'y a plus rien d\'urgent.',
+    fait:'✓ Fait', plus_tard:'Plus tard', ouvrir_lien:'Ouvrir ↗', astuce:'Glisse la carte : → fait · ← plus tard', ensuite:'Ensuite', compte:'Ce qui compte aujourd\'hui',
+    ios_titre:'Installer Now sur l\'iPhone', ios_etapes:'<li>Touche <b>Partager</b> (le carré avec la flèche, en bas de Safari)</li><li>Choisis <b>Sur l\'écran d\'accueil</b></li><li>Touche <b>Ajouter</b></li>',
+    compris:'Compris', noms:{famille:'Famille', clients:'Clients', argent:'Argent', outils:'Outils'},
+    m_repos:'touche pour le focus', m_pause:'en pause · touche', m_focus:'une seule chose', m_fin:'bloc terminé · pause 5 min',
+    e_phrase:'Phrase incorrecte. Vérifie les tirets et les lettres.', e_reseau:'Pas de connexion : réessaie en ligne.', e_change:'La phrase enregistrée ne marche plus (elle a changé ?). Entre la nouvelle.',
+    s_demo:'Données d\'exemple, fictives.', s_donnees:(j, m, h, n, mo) => `Données du ${j}/${m} à ${h} · ${n} tâches · choix : ${mo === 'règles' ? 'règles de priorité' : 'IA ' + mo}.`,
+    faire:'Faire maintenant : ', en_ligne:'En ligne', hors_ligne:'Hors ligne : dernières données connues', locale:'fr-FR'},
+  en: {passer:'Skip', installer:'Install', v_titre:'Your secret phrase', v_texte:'Your data is encrypted. Enter the phrase once: this phone will remember it.',
+    ouvrir:'Unlock', voir_demo:'See the demo', demo:'<b>Demo mode</b>: these are <b>examples</b>, not your real tasks.', mes_donnees:'My data',
+    maintenant:'Now', a_anneau:'Start or pause the 25-minute focus', tout_fait:'All done.', respire:'Breathe. Nothing urgent left.',
+    fait:'✓ Done', plus_tard:'Later', ouvrir_lien:'Open ↗', astuce:'Swipe the card: → done · ← later', ensuite:'Up next', compte:'What matters today',
+    ios_titre:'Install Now on your iPhone', ios_etapes:'<li>Tap <b>Share</b> (the square with the arrow, at the bottom of Safari)</li><li>Choose <b>Add to Home Screen</b></li><li>Tap <b>Add</b></li>',
+    compris:'Got it', noms:{famille:'Home & family', clients:'Work', argent:'Money', outils:'Tools'},
+    m_repos:'tap to focus', m_pause:'paused · tap', m_focus:'just one thing', m_fin:'block done · 5-min break',
+    e_phrase:'Wrong phrase. Check the dashes and letters.', e_reseau:'No connection: try again online.', e_change:'The saved phrase no longer works (did it change?). Enter the new one.',
+    s_demo:'Sample data, made up.', s_donnees:(j, m, h, n, mo) => `Data from ${m}/${j} at ${h} · ${n} tasks · picked by: ${mo === 'règles' ? 'priority rules' : 'AI ' + mo}.`,
+    faire:'Do now: ', en_ligne:'Online', hors_ligne:'Offline: last known data', locale:'en-GB'}};
+const hashProfil = (location.hash.match(/^#(david|leeya)\b/) || [])[1];
+let PROFIL = hashProfil || lire('now-profil', null);
+let LANG = PROFILS[PROFIL] || (/^fr/i.test(navigator.language || '') ? 'fr' : 'en');
+let T = TXT[LANG], NOMS = T.noms;
+function appliquerLangue(lang) {
+  LANG = lang; T = TXT[lang]; NOMS = T.noms; document.documentElement.lang = lang;
+  document.querySelectorAll('[data-t]').forEach(e => e.textContent = T[e.dataset.t]);
+  document.querySelectorAll('[data-h]').forEach(e => e.innerHTML = T[e.dataset.h]);
+  document.querySelectorAll('[data-a]').forEach(e => e.setAttribute('aria-label', T[e.dataset.a]));
+  dessinerPrefs && dessinerPrefs();
+}
+var dessinerPrefs = null;
 
 /* ---------- Données d'exemple (mode démo) : fictives, jamais mélangées aux vraies ---------- */
 const DEMO = {genere: new Date().toISOString().slice(0,16).replace('T',' '), moteur:'exemple', exemple:true, taches:[
@@ -267,6 +302,13 @@ const DEMO = {genere: new Date().toISOString().slice(0,16).replace('T',' '), mot
   {id:'d4', pole:'outils', titre:'Mettre à jour le téléphone', detail:'Exemple · 10 minutes, à faire une fois', quand:'ce soir', score:30},
   {id:'d5', pole:'clients', titre:'Appeler Daniel pour le brief', detail:'Exemple · créneau 17 h 30', quand:'17:30', score:55},
   {id:'d6', pole:'famille', titre:'Acheter le gâteau d\'anniversaire', detail:'Exemple · avant 19 h', quand:'avant 19:00', score:50}]};
+const DEMO_EN = {...DEMO, taches:[
+  {id:'d1', pole:'famille', titre:'Visit the apartment on Lily Street', detail:'Example · 3:30 p.m. · bring the lease papers', quand:'15:30', score:90, phrase:'Get ready: the 3:30 visit is coming up.', pourquoi:'A fixed appointment always comes first.'},
+  {id:'d2', pole:'clients', titre:'Reply to Sarah (website quote)', detail:'Example · waiting for 40 min', quand:'40 min ago', score:70},
+  {id:'d3', pole:'argent', titre:'Send the invoice for project Alpha', detail:'Example · $1,200 to collect this week', quand:'today', score:60},
+  {id:'d4', pole:'outils', titre:'Update your phone', detail:'Example · 10 minutes, once', quand:'tonight', score:30},
+  {id:'d5', pole:'clients', titre:'Call Daniel for the brief', detail:'Example · 5:30 p.m. slot', quand:'17:30', score:55},
+  {id:'d6', pole:'famille', titre:'Buy the birthday cake', detail:'Example · before 7 p.m.', quand:'before 19:00', score:50}]};
 
 /* ---------- Déchiffrement : PBKDF2-SHA256 → AES-GCM (WebCrypto) ---------- */
 const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
@@ -278,16 +320,21 @@ async function dechiffrer(enc, phrase) {
 }
 const normaliser = p => p.trim().toLowerCase().replace(/\s+/g, '');
 async function charger(phrase) {
-  const r = await fetch('now.enc.json', {cache:'no-store'});
-  if (!r.ok) throw new Error('données indisponibles');
-  return dechiffrer(await r.json(), phrase);
+  // La phrase désigne le profil : on essaie d'abord le profil connu, puis l'autre (l'appli installée sur iPhone ne voit pas le stockage de Safari).
+  const ordre = [PROFIL, ...Object.keys(PROFILS)].filter((p, i, a) => p && a.indexOf(p) === i);
+  let reseau = false;
+  for (const p of ordre) {
+    let enc; try { const r = await fetch(`now.${p}.enc.json`, {cache:'no-store'}); if (!r.ok) continue; enc = await r.json(); reseau = true; } catch { continue; }
+    try { const d = await dechiffrer(enc, phrase); PROFIL = p; ecrire('now-profil', p); if (LANG !== PROFILS[p]) appliquerLangue(PROFILS[p]); return d; } catch {}
+  }
+  throw new Error(reseau ? 'phrase' : 'réseau');
 }
 
 /* ---------- État ---------- */
 let DATA = null, demo = false;
 let faits = [], reportes = [], force = null;
 let boost = lire('now-boost', {famille:true, clients:true, argent:true, outils:false});
-const cleJour = () => 'now-' + DATA.genere.slice(0,10) + (demo ? '-demo' : '');
+const cleJour = () => 'now-' + (PROFIL || 'x') + '-' + DATA.genere.slice(0,10) + (demo ? '-demo' : '');
 function chargerJour() { faits = lire(cleJour() + '-faits', []); reportes = lire(cleJour() + '-reportes', []); force = null; }
 
 function classement() {
@@ -314,12 +361,11 @@ function afficher() {
   }
   $('contenu').hidden = false; $('vide').hidden = true;
   remplirCarte(x);
-  $('file').innerHTML = L.slice(1, 7).map((t, i) => `<li tabindex="0" data-id="${esc(t.id)}" style="--i:${i}" aria-label="Faire maintenant : ${esc(t.titre)}">
+  $('file').innerHTML = L.slice(1, 7).map((t, i) => `<li tabindex="0" data-id="${esc(t.id)}" style="--i:${i}" aria-label="${esc(T.faire + t.titre)}">
     <span class="pastille" style="background:${COULEUR[t.pole] || 'var(--doux)'}" title="${esc(NOMS[t.pole] || '')}"></span>
     <div><div class="t">${esc(t.titre)}</div><div class="d">${esc(t.detail || '')}</div></div><span class="quand">${esc(t.quand || '')}</span></li>`).join('');
   const d = DATA.genere;
-  $('source').textContent = demo ? 'Données d\'exemple, fictives.' :
-    `Données du ${d.slice(8,10)}/${d.slice(5,7)} à ${d.slice(11)} · ${DATA.taches.length} tâches · choix : ${DATA.moteur === 'règles' ? 'règles de priorité' : 'IA ' + DATA.moteur}.`;
+  $('source').textContent = demo ? T.s_demo : T.s_donnees(d.slice(8,10), d.slice(5,7), d.slice(11), DATA.taches.length, DATA.moteur);
   document.title = 'Now · ' + (x.titre.length > 28 ? x.titre.slice(0, 27) + '…' : x.titre);
 }
 
@@ -386,30 +432,34 @@ function dessiner() {
   $('temps').textContent = String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
   $('prog').style.strokeDashoffset = 289 * (1 - s / TOTAL);
 }
-function arreter() { clearInterval(tic); tic = null; fin = null; reste = TOTAL; $('anneau').classList.remove('focus'); $('etatMin').textContent = 'touche pour le focus'; dessiner(); }
+function arreter() { clearInterval(tic); tic = null; fin = null; reste = TOTAL; $('anneau').classList.remove('focus'); $('etatMin').textContent = T.m_repos; dessiner(); }
 function basculerFocus() {
-  if (tic) { clearInterval(tic); tic = null; fin = null; $('anneau').classList.remove('focus'); $('etatMin').textContent = 'en pause · touche'; return; }
-  buzz(15); fin = Date.now() + reste * 1000; $('anneau').classList.add('focus'); $('etatMin').textContent = 'une seule chose';
+  if (tic) { clearInterval(tic); tic = null; fin = null; $('anneau').classList.remove('focus'); $('etatMin').textContent = T.m_pause; return; }
+  buzz(15); fin = Date.now() + reste * 1000; $('anneau').classList.add('focus'); $('etatMin').textContent = T.m_focus;
   tic = setInterval(() => {
     reste = Math.round((fin - Date.now()) / 1000); dessiner();   // horloge murale : reste juste même si l'onglet dort
-    if (reste <= 0) { arreter(); $('etatMin').textContent = 'bloc terminé · pause 5 min'; confettis(); buzz([80, 60, 80]); }
+    if (reste <= 0) { arreter(); $('etatMin').textContent = T.m_fin; confettis(); buzz([80, 60, 80]); }
   }, 500);
 }
 $('anneau').onclick = basculerFocus;
 $('anneau').onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); basculerFocus() } };
 
 /* ---------- Préférences ---------- */
-$('prefs').innerHTML = Object.keys(NOMS).map(k => `<label for="p-${k}"><input type="checkbox" id="p-${k}" ${boost[k] ? 'checked' : ''}>
-  <span class="pastille" style="background:${COULEUR[k]}"></span>${NOMS[k]}</label>`).join('');
-Object.keys(NOMS).forEach(k => $('p-' + k).onchange = e => { buzz(8); boost[k] = e.target.checked; ecrire('now-boost', boost); changer('haut', () => {}); });
+dessinerPrefs = () => {
+  $('prefs').innerHTML = Object.keys(NOMS).map(k => `<label for="p-${k}"><input type="checkbox" id="p-${k}" ${boost[k] ? 'checked' : ''}>
+    <span class="pastille" style="background:${COULEUR[k]}"></span>${esc(NOMS[k])}</label>`).join('');
+  Object.keys(NOMS).forEach(k => $('p-' + k).onchange = e => { buzz(8); boost[k] = e.target.checked; ecrire('now-boost', boost); changer('haut', () => {}); });
+};
+dessinerPrefs();
 
 /* ---------- Horloge et connexion ---------- */
-const heure = () => new Date().toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit', timeZone:'Asia/Jerusalem'});
+const heure = () => new Date().toLocaleTimeString(T.locale, {hour:'2-digit', minute:'2-digit', timeZone:'Asia/Jerusalem'});
 const majHorloge = () => $('horloge').textContent = heure();
 setInterval(majHorloge, 15000); majHorloge();
-const majEtat = () => { $('etat').classList.toggle('hors', !navigator.onLine); $('etat').title = navigator.onLine ? 'En ligne' : 'Hors ligne : dernières données connues'; };
+const majEtat = () => { $('etat').classList.toggle('hors', !navigator.onLine); $('etat').title = navigator.onLine ? T.en_ligne : T.hors_ligne; };
 addEventListener('online', majEtat); addEventListener('offline', majEtat); majEtat();
 
+appliquerLangue(LANG);
 /* ---------- Démarrage : verrou → application ---------- */
 function montrer(vue) { $('verrou').hidden = vue !== 'verrou'; $('appli').hidden = vue !== 'appli'; }
 function lancer(data, estDemo) {
@@ -421,23 +471,25 @@ async function deverrouiller(phrase, silencieux) {
     ecrire('now-phrase', normaliser(phrase)); lancer(d, false); return true;
   } catch (e) {
     if (!silencieux) {
-      $('erreur').textContent = navigator.onLine ? 'Phrase incorrecte. Vérifie les tirets et les lettres.' : 'Pas de connexion : réessaie en ligne.';
+      $('erreur').textContent = navigator.onLine && e.message !== 'réseau' ? T.e_phrase : T.e_reseau;
       const f = $('formPhrase'); f.classList.remove('secoue'); void f.offsetWidth; f.classList.add('secoue'); buzz([40, 40, 40]);
     }
     return false;
   }
 }
 $('formPhrase').onsubmit = async e => { e.preventDefault(); $('erreur').textContent = ''; const b = e.submitter; b && (b.disabled = true); await deverrouiller($('phrase').value, false); b && (b.disabled = false); };
-$('btnDemo').onclick = () => lancer(DEMO, true);
+$('btnDemo').onclick = () => lancer(LANG === 'en' ? DEMO_EN : DEMO, true);
 $('btnVrai').onclick = () => { const p = lire('now-phrase', ''); p ? deverrouiller(p, false).then(ok => { if (!ok) montrer('verrou') }) : montrer('verrou'); };
 
 async function demarrer() {
   // Lien d'installation avec la phrase dans le fragment (#k=…) : le fragment ne part jamais vers le serveur.
   const m = location.hash.match(/k=([^&]+)/);
-  if (m) { ecrire('now-phrase', normaliser(decodeURIComponent(m[1]))); history.replaceState(null, '', location.pathname); }
+  if (m) ecrire('now-phrase', normaliser(decodeURIComponent(m[1])));
+  if (hashProfil) ecrire('now-profil', hashProfil);
+  if (m || hashProfil) history.replaceState(null, '', location.pathname + (PROFIL ? '#' + PROFIL : ''));   // la phrase quitte l'adresse, le profil reste (pour « écran d'accueil »)
   const p = lire('now-phrase', '');
   if (p && await deverrouiller(p, true)) return;
-  if (p) $('erreur').textContent = 'La phrase enregistrée ne marche plus (elle a changé ?). Entre la nouvelle.';
+  if (p) $('erreur').textContent = T.e_change;
   montrer('verrou');
 }
 // Rafraîchit les données quand l'appli revient au premier plan (toutes les 5 min au plus)
