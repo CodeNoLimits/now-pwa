@@ -143,6 +143,7 @@ h2{font:700 12px var(--corps);letter-spacing:.2em;text-transform:uppercase;color
 @keyframes monte{to{opacity:1;transform:none}}
 .file .t{font-weight:700;overflow-wrap:anywhere;font-size:15px;line-height:1.3}
 .file .d{font-size:13px;color:var(--doux);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;margin-top:2px}
+#clients .d{-webkit-line-clamp:unset;display:block}  /* fiches client : le détail complet, c'est lui qui explique où on en est */
 .pastille{width:10px;height:10px;border-radius:50%;flex:none}
 .quand{font:600 12px var(--mono);color:var(--doux);white-space:nowrap}
 .file .num{font:800 13px var(--display);color:var(--doux);width:18px;text-align:center}
@@ -252,6 +253,11 @@ h2{font:700 12px var(--corps);letter-spacing:.2em;text-transform:uppercase;color
       <ol class="file" id="file"></ol>
     </section>
 
+    <section style="margin-top:22px" id="secClients" hidden>
+      <h2 data-t="clients_etat">Clients — où on en est</h2>
+      <ol class="file" id="clients"></ol>
+    </section>
+
     <section style="margin-top:22px">
       <h2 data-t="compte">Ce qui compte aujourd'hui</h2>
       <div class="prefs" id="prefs"></div>
@@ -300,7 +306,7 @@ const TXT = {
   fr: {passer:'Passer', installer:'Installer', v_titre:'Ta phrase secrète', v_texte:'Tes données sont chiffrées. Entre la phrase une seule fois : ce téléphone la gardera.',
     ouvrir:'Déverrouiller', voir_demo:'Voir la démo', demo:'<b>Mode démo</b> : ce sont des <b>exemples</b>, pas tes vraies tâches.', mes_donnees:'Mes données',
     maintenant:'Maintenant', a_anneau:'Lancer ou mettre en pause le focus de 25 minutes', tout_fait:'Tout est fait.', respire:'Respire. Il n\'y a plus rien d\'urgent.',
-    fait:'✓ Fait', plus_tard:'Plus tard', ouvrir_lien:'Ouvrir ↗', astuce:'Glisse la carte : → fait · ← plus tard', ensuite:'Ensuite', compte:'Ce qui compte aujourd\'hui',
+    fait:'✓ Fait', plus_tard:'Plus tard', ouvrir_lien:'Ouvrir ↗', astuce:'Glisse la carte : → fait · ← plus tard', ensuite:'Ensuite', clients_etat:'Clients — où on en est', compte:'Ce qui compte aujourd\'hui',
     ios_titre:'Installer Now sur l\'iPhone', ios_etapes:'<li>Touche <b>Partager</b> (le carré avec la flèche, en bas de Safari)</li><li>Choisis <b>Sur l\'écran d\'accueil</b></li><li>Touche <b>Ajouter</b></li>',
     compris:'Compris', noms:{famille:'Famille', clients:'Clients', argent:'Argent', outils:'Outils'},
     m_repos:'touche pour le focus', m_pause:'en pause · touche', m_focus:'une seule chose', m_fin:'bloc terminé · pause 5 min',
@@ -317,7 +323,7 @@ const TXT = {
   en: {passer:'Skip', installer:'Install', v_titre:'Your secret phrase', v_texte:'Your data is encrypted. Enter the phrase once: this phone will remember it.',
     ouvrir:'Unlock', voir_demo:'See the demo', demo:'<b>Demo mode</b>: these are <b>examples</b>, not your real tasks.', mes_donnees:'My data',
     maintenant:'Now', a_anneau:'Start or pause the 25-minute focus', tout_fait:'All done.', respire:'Breathe. Nothing urgent left.',
-    fait:'✓ Done', plus_tard:'Later', ouvrir_lien:'Open ↗', astuce:'Swipe the card: → done · ← later', ensuite:'Up next', compte:'What matters today',
+    fait:'✓ Done', plus_tard:'Later', ouvrir_lien:'Open ↗', astuce:'Swipe the card: → done · ← later', ensuite:'Up next', clients_etat:'Clients — where things stand', compte:'What matters today',
     ios_titre:'Install Now on your iPhone', ios_etapes:'<li>Tap <b>Share</b> (the square with the arrow, at the bottom of Safari)</li><li>Choose <b>Add to Home Screen</b></li><li>Tap <b>Add</b></li>',
     compris:'Got it', noms:{famille:'Home & family', clients:'Work', argent:'Money', outils:'Tools'},
     m_repos:'tap to focus', m_pause:'paused · tap', m_focus:'just one thing', m_fin:'block done · 5-min break',
@@ -415,6 +421,11 @@ function afficher() {
   $('file').innerHTML = L.slice(1, 7).map((t, i) => `<li tabindex="0" data-id="${esc(t.id)}" style="--i:${i}" aria-label="${esc(T.faire + t.titre)}">
     <span class="pastille" style="background:${COULEUR[t.pole] || 'var(--doux)'}" title="${esc(NOMS[t.pole] || '')}"></span>
     <div><div class="t">${esc(t.titre)}</div><div class="d">${esc(t.detail || '')}</div></div><span class="quand">${esc(t.quand || '')}</span><button class="mini-ia" type="button" data-id="${esc(t.id)}" aria-label="${esc(T.deleguer)}">🤖</button></li>`).join('');
+  const C = DATA.taches.filter(t => String(t.id).startsWith('client-'));
+  $('secClients').hidden = !C.length;
+  $('clients').innerHTML = C.map((t, i) => `<li tabindex="0" data-id="${esc(t.id)}" style="--i:${i}" aria-label="${esc(T.faire + t.titre)}">
+    <span class="pastille" style="background:${COULEUR[t.pole] || 'var(--doux)'}" title="${esc(NOMS[t.pole] || '')}"></span>
+    <div><div class="t">${esc(t.titre)}</div><div class="d">${esc(t.detail || '')}</div></div><span class="quand">${esc(t.quand || '')}</span></li>`).join('');
   const d = DATA.genere;
   $('source').textContent = demo ? T.s_demo : T.s_donnees(d.slice(8,10), d.slice(5,7), d.slice(11), DATA.taches.length, DATA.moteur);
   document.title = 'Now · ' + (x.titre.length > 28 ? x.titre.slice(0, 27) + '…' : x.titre);
@@ -473,6 +484,7 @@ $('btnFait').onclick = fait; $('btnPlusTard').onclick = plusTard;
 
 /* Toucher une tâche de la file = la faire passer devant */
 $('file').addEventListener('click', e => { const li = e.target.closest('li'); if (li) passerDevant(li.dataset.id); });
+$('clients').addEventListener('click', e => { const li = e.target.closest('li'); if (li) passerDevant(li.dataset.id); });
 $('file').addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { const li = e.target.closest('li'); if (li) { e.preventDefault(); passerDevant(li.dataset.id) } } });
 function passerDevant(id) { buzz(10); arreter(); window.scrollTo({top:0, behavior: calme ? 'auto' : 'smooth'}); changer('haut', () => { force = id }); }
 
